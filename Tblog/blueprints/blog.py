@@ -31,19 +31,8 @@ def show_post(post_id):
     post = Post.query.get_or_404(post_id)
     return render_template('blog/post.html', post=post)
 
-@blog_bp.route('/post/article/<int:article_id>')
+@blog_bp.route('/post/articles/<int:article_id>')
 def show_article(article_id):
-    return render_template('blog/article.html', article_id=article_id)
+    post = Post.query.get_or_404(article_id)
+    return render_template('blog/article.html', post=post.body)
 
-@blog_bp.route('/post/upload', methods=['POST'])
-def upload_article():
-    data = request.get_json()
-    if data.get('token') == token:
-        pass
-    title = data['title']
-    body = data['body']
-    category = data['category']
-    if not title or not body or not category:
-        abort(404)
-    # 处理注册函数!@!!!!!    
-    return render_template('blog')

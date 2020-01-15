@@ -1,13 +1,16 @@
-from datetime import datetime
 
+from datetime import datetime
+import secrets
 from Tblog.extensions import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 class Admin(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20))
     password_hash = db.Column(db.String(128))
+    api_key = db.Column(db.String(128))
     blog_title = db.Column(db.String(60))
     blog_sub_title = db.Column(db.String(100))
     name = db.Column(db.String(30))
@@ -15,9 +18,17 @@ class Admin(db.Model, UserMixin):
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
+        self.set_api_key()
 
-    def validate_password(self, password):
+    def set_api_key(self):
+        self.api_key = secrets.token_urlsafe(128) 
+
+    def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
+        
+    def verify_api_key(self,api_key):
+        return api_key == self.api_key
+    
 
 
 class Category(db.Model):
@@ -40,7 +51,7 @@ class Category(db.Model):
 
 
 class Post(db.Model):
-    id =db.Column(db.Integer, primary_key=True)
+    id =db.Column(db.Integer, autoincrement=True, primary_key=True)
     title = db.Column(db.String(60))
     body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
