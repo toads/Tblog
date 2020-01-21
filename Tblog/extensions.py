@@ -21,7 +21,6 @@ csrf = CSRFProtect()
 moment = Moment()
 toolbar = DebugToolbarExtension()
 # migrate = Migrate()
-api = Api()
 
 @login_manager.user_loader
 def load_user(user_id):

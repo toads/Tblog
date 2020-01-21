@@ -11,8 +11,8 @@ import random
 from faker import Faker
 from sqlalchemy.exc import IntegrityError
 
-from bluelog import db
-from bluelog.models import Admin, Category, Post, Comment, Link
+from Tblog import db
+from Tblog.models import Admin, Category, Article, Link
 
 fake = Faker()
 
@@ -25,7 +25,7 @@ def fake_admin():
         name='Mima Kirigoe',
         about='Um, l, Mima Kirigoe, had a fun time as a member of CHAM...'
     )
-    admin.set_password('helloflask')
+    admin.set_password('admin')
     db.session.add(admin)
     db.session.commit()
 
@@ -45,9 +45,10 @@ def fake_categories(count=10):
 
 def fake_posts(count=50):
     for i in range(count):
-        post = Post(
+        post = Article(
             title=fake.sentence(),
             body=fake.text(2000),
+            author='toads',
             category=Category.query.get(random.randint(1, Category.query.count())),
             timestamp=fake.date_time_this_year()
         )
@@ -57,60 +58,7 @@ def fake_posts(count=50):
 
 
 def fake_comments(count=500):
-    for i in range(count):
-        comment = Comment(
-            author=fake.name(),
-            email=fake.email(),
-            site=fake.url(),
-            body=fake.sentence(),
-            timestamp=fake.date_time_this_year(),
-            reviewed=True,
-            post=Post.query.get(random.randint(1, Post.query.count()))
-        )
-        db.session.add(comment)
-
-    salt = int(count * 0.1)
-    for i in range(salt):
-        # unreviewed comments
-        comment = Comment(
-            author=fake.name(),
-            email=fake.email(),
-            site=fake.url(),
-            body=fake.sentence(),
-            timestamp=fake.date_time_this_year(),
-            reviewed=False,
-            post=Post.query.get(random.randint(1, Post.query.count()))
-        )
-        db.session.add(comment)
-
-        # from admin
-        comment = Comment(
-            author='Mima Kirigoe',
-            email='mima@example.com',
-            site='example.com',
-            body=fake.sentence(),
-            timestamp=fake.date_time_this_year(),
-            from_admin=True,
-            reviewed=True,
-            post=Post.query.get(random.randint(1, Post.query.count()))
-        )
-        db.session.add(comment)
-    db.session.commit()
-
-    # replies
-    for i in range(salt):
-        comment = Comment(
-            author=fake.name(),
-            email=fake.email(),
-            site=fake.url(),
-            body=fake.sentence(),
-            timestamp=fake.date_time_this_year(),
-            reviewed=True,
-            replied=Comment.query.get(random.randint(1, Comment.query.count())),
-            post=Post.query.get(random.randint(1, Post.query.count()))
-        )
-        db.session.add(comment)
-    db.session.commit()
+    pass
 
 
 def fake_links():

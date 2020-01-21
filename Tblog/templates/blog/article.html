@@ -1,7 +1,13 @@
-{{ post }}
-<!-- Markdeep: -->
-<style class="fallback">
-    body{visibility:hidden;white-space:pre;font-family:monospace}
-</style>
-<script src="/static/markdeep.min.js" charset="utf-8"></script>
-<script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>
+{% extends 'base.html' %}
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+    </div>
+    <div id="content"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        document.getElementById('content').innerHTML = marked(`{{post.body|safe}}`);
+    </script> 
+{% endblock %}

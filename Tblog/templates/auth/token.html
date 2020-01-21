@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% from "bootstrap/form.html" import render_form %}
+
+{% block title %}Token{% endblock %}
+
+{% block content %}
+    <script type="text/javascript">
+    function copyUrl2()
+    {
+      var Url2=document.getElementById("token_text");
+      Url2.select(); 
+      document.execCommand("Copy"); 
+      alert("已复制好，可贴粘。");
+    }
+    </script>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">当前用户:{{current_user.username}}</h3>
+        </div>
+        <div class="panel-body">
+            
+            <pre cols=100vh rows="3" id="token_text" class="well" >{{token}}</pre>
+            <button type="button" onClick="copyUrl2()" class="btn btn-primary">点击复制</button>
+
+        </div>
+      </div>
+    <div>
+    </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

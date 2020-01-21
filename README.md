@@ -10,6 +10,9 @@ $ cd Tblog
 $ python3 -m venv venv
 $ source venv/bin/activate
 $ python3 -m pip install -r requirements.txt
+$ python3 -m flask initdb --drop
+$ python3 -m flask init
+$ python3 -m flask forge
 $ python3 -m flask run
 ```
 

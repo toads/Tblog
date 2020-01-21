@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% from 'bootstrap/form.html' import render_form %}
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
@@ -7,7 +6,12 @@
     </div>
     <div class="row">
         <div class="col-sm-8"  height=auto style="height:98vh">
-            <iframe src="{{url_for('blog.show_article', article_id=post.id)}}"  frameborder="0" height=100% style="height:100%;width:100%" height="100%" width="100%"></iframe>
+            <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <script>
+            document.getElementById('content').innerHTML =
+            marked('# Marked in the browser\n\nRendered by **marked**.');
+        </script> 
+            <iframe src="{{url_for('blog.show_article', article_id=post.id)}}"   scrolling="no"></iframe>
         </div>
     </div>
     
