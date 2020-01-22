@@ -5,12 +5,11 @@
 
 {% block content %}
     <div class="container h-100">
-        <div class="row h-100 page-header justify-content-center align-items-center">
-            <h1>Log in</h1>
+        <div style="max-width: 330px; margin: 0 auto; padding: 15px;" class="row h-100 page-header justify-content-center align-items-center form-signin">
+            <h2>Log in</h2>
+            {{ render_form(form) }}
         </div>
-        <div class="row h-100 justify-content-center align-items-center">
-            {{ render_form(form, extra_classes='col-6') }}
-        </div>
+        
     </div>
 {% endblock %}
 

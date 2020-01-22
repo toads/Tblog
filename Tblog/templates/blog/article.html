@@ -2,8 +2,7 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-    <div class="page-header">
-    </div>
+    <div class="page-header"><h2>{{ post.title|safe }}</h2></div>
     <div id="content"></div>
     
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>

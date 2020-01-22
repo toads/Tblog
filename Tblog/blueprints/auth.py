@@ -41,7 +41,7 @@ def logout():
     return redirect_back()
 
  
-@auth_bp.route('/users/<string:username>',methods=['GET'])
+@auth_bp.route('/users/<string:username>/token',methods=['GET'])
 @login_required
 def get_auth_token(username):
     if username!=(current_user.username.lower()):
