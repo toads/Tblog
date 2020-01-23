@@ -3,26 +3,27 @@ import tempfile
 
 import pytest
 from Tblog import create_app
+from Tblog.models import Admin,Category,Article
 from Tblog.extensions import db
 @pytest.fixture
-def client():
+def app():
     """Create and configure a new app instance for each test."""
-    # create a temporary file to isolate the database for each test
-    db_fd, db_path = tempfile.mkstemp()
     # create the app with common test config
-    app = create_app({"TESTING": True, "DATABASE": db_path})
-    
+    app = create_app("testing")
+    app.config['SECRET_KEY']='testing_key'
     # create the database and load test data
     with app.app_context():
+        
+        db.drop_all()
         db.create_all()
         admin = Admin(
-                username=username,
-                blog_title="Toads' Blog",
+                username='test',
+                blog_title="Tests Blog",
                 blog_sub_title="Life, Programming, Miscellaneous",
-                name='Toads',
+                name='Tests',
                 about='Nothing except you!'
             )
-        admin.set_password(password)
+        admin.set_password('test')
         db.session.add(admin)
         category = Category.query.first()
         category = Category(name='Default')
@@ -31,8 +32,9 @@ def client():
         yield app
 
     # close and remove the temporary database
-    os.close(db_fd)
-    os.unlink(db_path)
+@pytest.fixture
+def client(app):
+    return app.test_client()
 
 @pytest.fixture
 def test_empty_db(client):
@@ -52,7 +54,7 @@ class AuthActions(object):
     def __init__(self, client):
         self._client = client
 
-    def login(self, username="admin", password="admin"):
+    def login(self, username="test", password="test"):
         return self._client.post(
             "/auth/login", data={"username": username, "password": password}
         )

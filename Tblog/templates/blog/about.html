@@ -3,12 +3,15 @@
 {% block title %}About Me{% endblock %}
 
 {% block content %}
-    <div class="page-header">
-        <h1>I am a lazy programer.</h1>
-    </div>
-    <div class="jumbotron">
-        <h1>My link</h1>
-        <p>github: <a href="https://github.com/toads">https://github.com/toads</p>
-      </div>
-    
+<div class="container-fluid">
+  <div class="page-header">
+    <h1>{{admin.name}}</h1>
+    <h2>{{admin.blog_sub_title}}</h2>
+  </div>
+  <div class="jumbotron">
+    <p>{{admin.about}}</p>
+    <h3>My links</h3>
+    <p>github: <a href="https://github.com/toads">https://github.com/toads</p>
+  </div>
+</div>
 {% endblock %}

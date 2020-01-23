@@ -1,13 +1,9 @@
 {% extends 'base.html' %}
-{% from 'bootstrap/pagination.html' import render_pager %}
-
 {% block title %}Home{% endblock %}
-
 {% block content %}
-    <div class="row">
-        <div class="col-sm-8">
-            {% include 'blog/_posts.html' %}
-        </div>
+<div class="container-fluid">
+    <div class="col-sm-8">
+        {% include 'blog/_posts.html' %}
     </div>
-    
+</div>    
 {% endblock %}

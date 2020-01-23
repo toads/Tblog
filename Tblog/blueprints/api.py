@@ -1,4 +1,4 @@
-from flask import Response,request,Blueprint,abort
+from flask import Response,request,Blueprint,abort,jsonify
 from Tblog.models import Admin,Article,Category
 from Tblog.extensions import db
 
@@ -40,6 +40,8 @@ class ArticleItem(Resource):
             if not article:
                 article = Article()
                 article.id = id
+                article.author = username
+
             if article.author != username:
                 abort(403,"Only the own can edit this article")
             if args.title: article.title = args.title
@@ -63,7 +65,7 @@ class ArticleItem(Resource):
                     abort(403,"Only the admin or owner can delete the article")
                 article.delete()
                 db.session.commit()
-                return "article delete success"
+                return jsonify(message='article delete success')
             else:
                 abort(400,"article has been delete")
         

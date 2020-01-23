@@ -1,4 +1,4 @@
-{% if posts.first() %}
+{% if posts %}
     {% for post in posts %}
         <h3 class="text-primary"><a href="{{ url_for('.show_article', post_id=post.id) }}">{{ post.title }}</a></h3>
         <small>

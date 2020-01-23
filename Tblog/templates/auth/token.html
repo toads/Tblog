@@ -4,26 +4,27 @@
 {% block title %}Token{% endblock %}
 
 {% block content %}
-    <script type="text/javascript">
+  <script type="text/javascript">
     function copyUrl2()
     {
       var Url2=document.getElementById("token_text");
-      Url2.select(); // 选择对象
-      document.execCommand("Copy"); // 执行浏览器复制命令
-      alert("已复制好，可贴粘。");
+      Url2.select(); 
+      document.execCommand("Copy"); 
+      alert("Copied success");
     }
-    </script>
-    <div class="panel panel-info ui-content">
+  </script>
+  <div class="container-fluid">
+    <div class="panel panel-info">
         <div class="panel-heading">
-          <h3 class="panel-title">当前用户:{{current_user.username}}</h3>
+          <h3 class="panel-title">Current user: {{current_user.username}}</h3>
         </div>
-        <div class="panel-body ui-field-contain " id="resizeable">
+        <div class="panel-body" id="resizeable">
             <textarea rows="4" cols="40" id="token_text" class="well" >{{token}}</textarea>
-            <input class="btn btn-primary" type="button" onClick="copyUrl2()" value="点击复制" />
+            <input class="btn btn-primary" type="button" onClick="copyUrl2()" value="Click to copy" />
         </div>
-      </div>
-    <div>
     </div>
+  </div>
+  
 {% endblock %}
 
 {% block footer %}{% endblock %}

@@ -1,4 +1,4 @@
-from flask import Blueprint,current_app, redirect,render_template,flash,url_for,jsonify,abort
+from flask import Blueprint,current_app, redirect,render_template,flash,url_for,jsonify,abort,request
 from flask_login import login_user, logout_user, login_required, current_user
 
 from Tblog.forms import LoginForm
@@ -25,11 +25,10 @@ def login():
         if admin:
             if admin.verify_password(username, password):
                 login_user(admin, remember)
-                flash('Welcome back.', 'info')
                 return redirect_back()
             flash('Invalid username or password.', 'warning')
         else:
-            flash('No account.', 'warning')
+            flash('Invalid username or password.', 'warning')
     return render_template('auth/login.html', form=form)
 
 
@@ -37,11 +36,10 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash('Logout success.', 'info')
     return redirect_back()
 
  
-@auth_bp.route('/users/<string:username>/token',methods=['GET'])
+@auth_bp.route('/<string:username>/token',methods=['GET'])
 @login_required
 def get_auth_token(username):
     if username!=(current_user.username.lower()):
@@ -49,6 +47,9 @@ def get_auth_token(username):
         abort(400)
     admin = Admin.query.filter_by(username=username).first()
     s = Serializer(current_app.config['SECRET_KEY'])
-    token = s.dumps({'username':username,'api_key':admin.api_key})
-    return render_template('auth/token.html',token=token.decode('utf-8'))
+    
+    token = s.dumps({'username':username,'api_key':admin.api_key}).decode('utf-8')
+    if request.args.get('json'):
+        return jsonify({'username':username,'token':token})
+    return render_template('auth/token.html',token=token)
 

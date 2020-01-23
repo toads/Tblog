@@ -16,3 +16,4 @@ $ python3 -m flask init  \# for official use
 $ python3 -m flask run
 ```
 
+PS: 默认用户名密码admin:admin

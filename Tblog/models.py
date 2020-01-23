@@ -81,8 +81,9 @@ class Article(db.Model):
             'id': self.id,
             'title': self.title,
             'author':self.author,
-            'category_id': self.category_id,
-            'timestamp':str(self.timestamp)
+            'category': self.category.name,
+            'timestamp':str(self.timestamp),
+            'show':self.show
             }
 
         return {
@@ -90,8 +91,9 @@ class Article(db.Model):
             'title': self.title,
             'author':self.author,
             'body' : self.body,
-            'category_id': self.category_id,
-            'timestamp':str(self.timestamp)
+            'category': self.category.name,
+            'timestamp':str(self.timestamp),
+            'show':self.show
             }
 
 

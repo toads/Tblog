@@ -23,13 +23,12 @@ post_article_parser.add_argument('category', type=str,required=True)
 post_article_parser.add_argument('show', type=bool,default=True)
 
 put_article_parser = reqparse.RequestParser()
-put_article_parser.add_argument('token', type=str, help="Authentication failed")
+put_article_parser.add_argument('token', type=str, required=True, help="Authentication failed")
 put_article_parser.add_argument('title', type=str)
 put_article_parser.add_argument('body', type=str)
 put_article_parser.add_argument('category', type=str)
 put_article_parser.add_argument('show', type=bool)
 
 delete_article_parser = reqparse.RequestParser()
-put_article_parser.add_argument('token',type=str,required=True,help="Authentication failed")
-
+delete_article_parser.add_argument('token',type=str,required=True,help="Authentication failed")
 

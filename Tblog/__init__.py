@@ -10,10 +10,10 @@ from Tblog.blueprints.admin import admin_bp
 from Tblog.blueprints.auth import auth_bp
 from Tblog.blueprints.blog import blog_bp
 from Tblog.blueprints.api import api_bp
-from Tblog.extensions import (bootstrap,  csrf, db, toolbar,login_manager,moment)
-
+from Tblog.extensions import (bootstrap,  csrf, db, toolbar,login_manager,moment,scheduler)
 from Tblog.models import Admin, Category, Article
 from Tblog.settings import config
+
 
 def create_app(config_name=None):
     if config_name is None:
@@ -32,9 +32,6 @@ def create_app(config_name=None):
     return app
 
 
-
-
-
 def register_extensions(app):
     bootstrap.init_app(app)
     db.init_app(app)
@@ -42,6 +39,9 @@ def register_extensions(app):
     toolbar.init_app(app)
     login_manager.init_app(app) 
     moment.init_app(app)
+    scheduler.init_app(app)
+    scheduler.start()
+
 
 def register_blueprints(app):
     app.register_blueprint(blog_bp)
