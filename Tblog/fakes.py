@@ -23,8 +23,7 @@ def fake_admin():
         blog_title='Bluelog',
         blog_sub_title="No, I'm the real thing.",
         name='Mima Kirigoe',
-        about='Um, l, Mima Kirigoe, had a fun time as a member of CHAM...'
-    )
+        about='Um, l, Mima Kirigoe, had a fun time as a member of CHAM...')
     admin.set_password('admin')
     db.session.add(admin)
     db.session.commit()
@@ -45,13 +44,12 @@ def fake_categories(count=10):
 
 def fake_posts(count=50):
     for i in range(count):
-        post = Article(
-            title=fake.sentence(),
-            body=fake.text(2000),
-            author='toads',
-            category=Category.query.get(random.randint(1, Category.query.count())),
-            timestamp=fake.date_time_this_year()
-        )
+        post = Article(title=fake.sentence(),
+                       body=fake.text(2000),
+                       author='toads',
+                       category=Category.query.get(
+                           random.randint(1, Category.query.count())),
+                       timestamp=fake.date_time_this_year())
 
         db.session.add(post)
     db.session.commit()

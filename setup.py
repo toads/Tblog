@@ -1,0 +1,47 @@
+from setuptools import setup
+
+requires = ['aniso8601==8.0.0',
+ 'argh==0.26.2',
+ 'blinker==1.4',
+ 'Bootstrap-Flask==1.2.0',
+ 'Click==7.0',
+ 'dominate==2.4.0',
+ 'Faker==4.0.0',
+ 'Flask==1.1.1',
+ 'Flask-Bootstrap==3.3.7.1',
+ 'Flask-Login==0.4.1',
+ 'Flask-Mail==0.9.1',
+ 'Flask-Moment==0.9.0',
+ 'Flask-OAuth==0.12',
+ 'Flask-RESTful==0.3.7',
+ 'Flask-SQLAlchemy==2.4.1',
+ 'Flask-WTF==0.14.2',
+ 'httplib2==0.15.0',
+ 'inflection==0.3.1',
+ 'itsdangerous==1.1.0',
+ 'Jinja2==2.10.3',
+ 'MarkupSafe==1.1.1',
+ 'pathtools==0.1.2',
+ 'pkg-resources==0.0.0',
+ 'python-dateutil==2.8.1',
+ 'python-dotenv==0.10.3',
+ 'pytz==2019.3',
+ 'PyYAML==5.3',
+ 'six==1.13.0',
+ 'SQLAlchemy==1.3.12',
+ 'text-unidecode==1.3',
+ 'visitor==0.1.3',
+ 'Werkzeug==0.16.0',
+ 'WTForms==2.2.1'
+ ]
+
+setup(
+    name='Tblog',
+    version='1.0',
+    description='A mini blog',
+    author='toads',
+    author_email='toads@foxmail.com',
+    packages=['Tblog'],
+    install_requires=requires,
+    license='MIT'
+)

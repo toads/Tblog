@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
 {% block title %}Category: {{category.name}}{% endblock %}
 {% block content %}
-    <div class="row">
+<div class="row">
+    <div class="col-sm-8">
+        <h2>Category: {{category.name}}</h2>
 
-        <div class="col-sm-8">
-            <h2>Category: {{category.name}}</h2>
-
-            {% include 'blog/_category.html' %}
-        </div>
+        {% include 'blog/_category.html' %}
     </div>
-    
+</div>
+
 {% endblock %}

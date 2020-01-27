@@ -1,3 +1,5 @@
 {
-    "python.pythonPath": "venv/bin/python3"
+    "python.pythonPath": "venv/bin/python3",
+    "python.linting.flake8Enabled": true,
+    "python.formatting.provider": "yapf",
 }

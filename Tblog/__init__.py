@@ -1,23 +1,27 @@
 # -*- coding: utf-8 -*-
 import click
 import os
+import logging
+from logging.handlers import SMTPHandler, RotatingFileHandler
 
-
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_wtf.csrf import CSRFError
 
 from Tblog.blueprints.admin import admin_bp
 from Tblog.blueprints.auth import auth_bp
 from Tblog.blueprints.blog import blog_bp
 from Tblog.blueprints.api import api_bp
-from Tblog.extensions import (bootstrap,  csrf, db, toolbar,login_manager,moment,scheduler)
+from Tblog.extensions import (bootstrap, csrf, db, toolbar, login_manager,
+                              moment, scheduler, mail)
 from Tblog.models import Admin, Category, Article
 from Tblog.settings import config
+
+basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 
 def create_app(config_name=None):
     if config_name is None:
-        config_name = os.getenv('FLASK_CONFIG','development')
+        config_name = os.getenv('FLASK_CONFIG', 'development')
     app = Flask('Tblog')
 
     app.config.from_object(config[config_name])
@@ -37,10 +41,46 @@ def register_extensions(app):
     db.init_app(app)
     csrf.init_app(app)
     toolbar.init_app(app)
-    login_manager.init_app(app) 
+    login_manager.init_app(app)
     moment.init_app(app)
-    scheduler.init_app(app)
-    scheduler.start()
+    mail.init_app(app)
+    if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
+        scheduler.init_app(app)
+        scheduler.start()
+
+
+def register_logging(app):
+    class RequestFormatter(logging.Formatter):
+        def format(self, record):
+            record.url = request.url
+            record.remote_addr = request.remote_addr
+            return super(RequestFormatter, self).format(record)
+
+    request_formatter = RequestFormatter(
+        '[%(asctime)s] %(remote_addr)s requested %(url)s\n'
+        '%(levelname)s in %(module)s: %(message)s')
+
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    file_handler = RotatingFileHandler(os.path.join(basedir, 'logs/Tblog.log'),
+                                       maxBytes=10 * 1024 * 1024,
+                                       backupCount=10)
+    file_handler.setFormatter(formatter)
+    file_handler.setLevel(logging.INFO)
+
+    mail_handler = SMTPHandler(mailhost=app.config['MAIL_SERVER'],
+                               fromaddr=app.config['MAIL_USERNAME'],
+                               toaddrs=['ADMIN_EMAIL'],
+                               subject='Bluelog Application Error',
+                               credentials=(app.config['MAIL_USERNAME'],
+                                            app.config['MAIL_PASSWORD']))
+    mail_handler.setLevel(logging.ERROR)
+    mail_handler.setFormatter(request_formatter)
+
+    if not app.debug:
+        app.logger.addHandler(mail_handler)
+        app.logger.addHandler(file_handler)
 
 
 def register_blueprints(app):
@@ -49,17 +89,22 @@ def register_blueprints(app):
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(api_bp, url_prefix='/api')
 
+
 def register_crsf_exclude(app):
     # https://flask-wtf.readthedocs.io/en/stable/csrf.html#exclude-views-from-protection
     # https://security.stackexchange.com/questions/166724/should-i-use-csrf-protection-on-rest-api-endpoints
     csrf.exempt(api_bp)
 
+
 def register_apis(app):
     app
+
+
 def register_shell_context(app):
     @app.shell_context_processor
     def make_shell_context():
         return dict(db=db, Admin=Admin, Article=Article, Category=Category)
+
 
 def register_template_context(app):
     pass
@@ -80,7 +125,8 @@ def register_errors(app):
 
     @app.errorhandler(CSRFError)
     def handle_csrf_error(e):
-        return render_template('errors/400.html', description=e.description), 400
+        return render_template('errors/400.html',
+                               description=e.description), 400
 
 
 def register_commands(app):
@@ -89,16 +135,23 @@ def register_commands(app):
     def initdb(drop):
         """Initialize the database."""
         if drop:
-            click.confirm('This operation will delete the database, do you want to continue?', abort=True)
+            click.confirm(
+                'This operation will delete the database, do you want to continue?',
+                abort=True)
             db.drop_all()
             click.echo('Drop tables.')
         db.create_all()
         click.echo('Initialized database.')
 
     @app.cli.command()
-    @click.option('--username', prompt=True, help='The username used to login.')
-    @click.option('--password', prompt=True, hide_input=True,
-                  confirmation_prompt=True, help='The password used to login.')
+    @click.option('--username',
+                  prompt=True,
+                  help='The username used to login.')
+    @click.option('--password',
+                  prompt=True,
+                  hide_input=True,
+                  confirmation_prompt=True,
+                  help='The password used to login.')
     def init(username, password):
         """Building Tblog, just for you."""
 
@@ -112,13 +165,11 @@ def register_commands(app):
             admin.set_password(password)
         else:
             click.echo('Creating the temporary administrator account...')
-            admin = Admin(
-                username=username,
-                blog_title="Toads' Blog",
-                blog_sub_title="Life, Programming, Miscellaneous",
-                name='Toads',
-                about='Nothing except you!'
-            )
+            admin = Admin(username=username,
+                          blog_title="Toads' Blog",
+                          blog_sub_title="Life, Programming, Miscellaneous",
+                          name='Toads',
+                          about='Nothing except you!')
             admin.set_password(password)
             db.session.add(admin)
 
@@ -132,9 +183,15 @@ def register_commands(app):
         click.echo('Done.')
 
     @app.cli.command()
-    @click.option('--category', default=10, help='Quantity of categories, default is 10.')
-    @click.option('--post', default=50, help='Quantity of posts, default is 50.')
-    @click.option('--comment', default=500, help='Quantity of comments, default is 500.')
+    @click.option('--category',
+                  default=10,
+                  help='Quantity of categories, default is 10.')
+    @click.option('--post',
+                  default=50,
+                  help='Quantity of posts, default is 50.')
+    @click.option('--comment',
+                  default=500,
+                  help='Quantity of comments, default is 500.')
     def forge(category, post, comment):
         """Generate fake data."""
         from Tblog.fakes import fake_admin, fake_categories, fake_posts, fake_comments, fake_links

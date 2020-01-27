@@ -5,9 +5,9 @@ from Tblog.extensions import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import JSONWebSignatureSerializer as Serializer
-from itsdangerous import BadSignature,SignatureExpired
+from itsdangerous import BadSignature, SignatureExpired
 
-# from itsdangerous import JSONWebSignatureSerializer as Serializer
+
 class Admin(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20))
@@ -23,15 +23,15 @@ class Admin(db.Model, UserMixin):
         self.set_api_key()
 
     def set_api_key(self):
-        self.api_key = secrets.token_urlsafe(24) 
+        self.api_key = secrets.token_urlsafe(24)
 
     def verify_password(self, username, password):
         if username == self.username:
             return check_password_hash(self.password_hash, password)
         else:
             return False
-        
-    def verify_token(self,token):
+
+    def verify_token(self, token):
         print("verify_token")
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
@@ -41,11 +41,13 @@ class Admin(db.Model, UserMixin):
             return False
         except SignatureExpired:
             return False
-        
-        if data['username']==self.username and data['api_key']==self.api_key:
+
+        if data['username'] == self.username and data[
+                'api_key'] == self.api_key:
             return True
         else:
             return False
+
 
 class Category(db.Model):
     """
@@ -56,7 +58,6 @@ class Category(db.Model):
 
     articles = db.relationship('Article', back_populates='category')
 
-    
     def delete(self):
         default_category = Category.query.get(1)
         articles = self.articles[:]
@@ -67,58 +68,36 @@ class Category(db.Model):
 
 
 class Article(db.Model):
-    id =db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(60))
-    author = db.Column(db.String(20)) # 考虑外键
+    author = db.Column(db.String(20))  # 考虑外键
     body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     category = db.relationship('Category', back_populates='articles')
     show = db.Column(db.Boolean, default=True)
-    def to_json(self,summary=False):
+
+    def to_json(self, summary=False):
         if summary:
             return {
-            'id': self.id,
-            'title': self.title,
-            'author':self.author,
-            'category': self.category.name,
-            'timestamp':str(self.timestamp),
-            'show':self.show
+                'id': self.id,
+                'title': self.title,
+                'author': self.author,
+                'category': self.category.name,
+                'timestamp': str(self.timestamp),
+                'show': self.show
             }
 
         return {
             'id': self.id,
             'title': self.title,
-            'author':self.author,
-            'body' : self.body,
+            'author': self.author,
+            'body': self.body,
             'category': self.category.name,
-            'timestamp':str(self.timestamp),
-            'show':self.show
-            }
+            'timestamp': str(self.timestamp),
+            'show': self.show
+        }
 
-
-    # can_comment = db.Column(db.Boolean, default=True)
-    # comments = db.relationship('Comment', back_populates='post', cascade='all, delete-orphan')
-
-# class Comment(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     author = db.Column(db.String(30))
-#     email = db.Column(db.String(254))
-#     site = db.Column(db.String(255))
-#     body = db.Column(db.Text)
-#     from_admin = db.Column(db.Boolean, default=False)
-#     reviewed = db.Column(db.Boolean, default=False)
-#     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
-
-#     replied_id = db.Column(db.Integer, db.ForeignKey('comment.id'))
-#     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
-
-#     post = db.relationship('Post', back_populates='comments')
-#     replies = db.relationship('Comment', back_populates='replied', cascade='all, delete-orphan')
-#     replied = db.relationship('Comment', back_populates='replies', remote_side=[id])
-#     # Same with:
-#     # replies = db.relationship('Comment', backref=db.backref('replied', remote_side=[id]),
-#     # cascade='all,delete-orphan')
 
 class Link(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -5,24 +5,26 @@
 
 {% block content %}
 {% with messages = get_flashed_messages(with_categories=true) %}
-  <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="alert alert-{{ category }} alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <!-- <strong>Title</strong> --> {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
+<!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }} alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+      aria-hidden="true">&times;</span></button>
+  <!-- <strong>Title</strong> --> {{ message }}
+</div>
+{% endfor %}
+{% endif %}
 {% endwith %}
 
-    <div class="container h-100">
-        <div style="max-width: 330px; margin: 0 auto; padding: 15px;" class="row h-100 page-header justify-content-center align-items-center form-signin">
-            <h2>Log in</h2>
-            {{ render_form(form) }}
-        </div>
-        
-    </div>
+<div class="container h-100">
+  <div style="max-width: 330px; margin: 0 auto; padding: 15px;"
+    class="row h-100 page-header justify-content-center align-items-center form-signin">
+    <h2>Log in</h2>
+    {{ render_form(form) }}
+  </div>
+
+</div>
 {% endblock %}
 
 {% block footer %}{% endblock %}

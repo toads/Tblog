@@ -1,10 +1,11 @@
-from flask import Blueprint,redirect,render_template,flash,url_for,jsonify,request
-from flask_login import login_user, logout_user, login_required, current_user
-from Tblog.extensions import db,csrf
+from flask import Blueprint, render_template, request, abort
+from flask_login import login_required
+from Tblog.extensions import db
 from Tblog.models import Admin, Category, Article
 admin_bp = Blueprint('admin', __name__)
 
-@admin_bp.route('/articles/new', methods=['GET','POST'])
+
+@admin_bp.route('/articles/new', methods=['GET', 'POST'])
 @login_required
 def upload_article():
     if request.method == 'POST':
@@ -19,18 +20,17 @@ def upload_article():
         category = data.get('category')
         if not title or not body or not category:
             abort(404)
-        
-        category_query_result =  Category.query.filter_by(name=category).first()
+
+        category_query_result = Category.query.filter_by(name=category).first()
         if category_query_result is None:
-            category_item = Category(name = category)
+            category_item = Category(name=category)
             db.session.add(category_item)
             db.session.commit()
 
         post = Article(
             title=title,
             body=body,
-            category = Category.query.filter_by(name=category).first()
-        )
+            category=Category.query.filter_by(name=category).first())
         db.session.add(post)
         db.session.commit()
         return render_template('blog/index.html')

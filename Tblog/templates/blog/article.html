@@ -2,21 +2,22 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-    <div class="page-header">
-        <h2>{{ post.title|safe }}</h2>
-        <div style="text-align: right;">
-            <small>
-                Category: <a href="{{ url_for('.show_category', category_id=post.category.id) }}">{{ post.category.name }}</a>
-                &nbsp;&nbsp;
-                <span  display=>{{ moment(post.timestamp).format('LL') }}</span>
-            </small>
-            </div>
+<div class="page-header">
+    <h2>{{ post.title|safe }}</h2>
+    <div style="text-align: right;">
+        <small>
+            Category: <a
+                href="{{ url_for('.show_category', category_id=post.category.id) }}">{{ post.category.name }}</a>
+            &nbsp;&nbsp;
+            <span display=>{{ moment(post.timestamp).format('LL') }}</span>
+        </small>
     </div>
-    
-    <div id="content"></div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script>
-        document.getElementById('content').innerHTML = marked(`{{post.body|safe}}`);
-    </script> 
+</div>
+
+<div id="content"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    document.getElementById('content').innerHTML = marked(`{{post.body|safe}}`);
+</script>
 {% endblock %}
