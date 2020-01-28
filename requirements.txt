@@ -14,7 +14,6 @@ Faker==3.0.0
 flake8==3.7.9
 Flask==1.1.1
 Flask-APScheduler==1.11.0
-Flask-Bootstrap==3.3.7.1
 Flask-DebugToolbar==0.10.1
 Flask-Login==0.4.1
 Flask-Mail==0.9.1
