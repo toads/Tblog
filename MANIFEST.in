@@ -1,0 +1,2 @@
+recursive-include Tblog/templates *
+recursive-include Tblog/static *
