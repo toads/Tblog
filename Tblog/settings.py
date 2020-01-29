@@ -38,7 +38,7 @@ class BaseConfig(object):
         'func': 'Tblog.emails:check_email',
         'args': None,
         'trigger': 'interval',
-        'seconds': 600
+        'seconds': 60
     }]
 
 

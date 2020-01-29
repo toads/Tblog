@@ -9,8 +9,8 @@ RUN mkdir -p /usr/src/app  && \
 WORKDIR /usr/src/app
 COPY requirements.txt /usr/src/app/requirements.txt
 
-RUN pip install --no-cache-dir gunicorn -i https://mirrors.aliyun.com/pypi/simple/ && \
-    pip install --no-cache-dir -r /usr/src/app/requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+RUN pip install --no-cache-dir gunicorn  && \
+    pip install --no-cache-dir -r /usr/src/app/requirements.txt 
 
 COPY . /usr/src/app
 
