@@ -148,6 +148,7 @@ def _check_email():
         action = re_result[0].lower()
         if not action:
             continue
+        print(re_result)
         post_dict['article_id'] = int(re_result[1] if re_result[1] else -1)
         post_dict['category'] = re_result[2] if re_result[2] else 'by_email'
         post_dict['show'] = False if re_result[3].lower() == 'hide' else True

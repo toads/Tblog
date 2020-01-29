@@ -6,6 +6,7 @@ services:
     build: .
     volumes:
       - blog-static:/usr/src/app/Tblog/static
+      - ./data.db:/usr/src/app/data.db
     env_file: .env
     networks:
       - webnet
