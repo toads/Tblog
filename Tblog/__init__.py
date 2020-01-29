@@ -44,9 +44,8 @@ def register_extensions(app):
     login_manager.init_app(app)
     moment.init_app(app)
     mail.init_app(app)
-    if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
-        scheduler.init_app(app)
-        scheduler.start()
+    scheduler.init_app(app)
+    scheduler.start()
 
 
 def register_logging(app):

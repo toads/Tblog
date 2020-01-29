@@ -126,6 +126,7 @@ def _check_email():
     # '# 本文采用MarkDown写成\r\n## 可以通过邮件发布Blog\r\n##
     # 我觉得可以加入利用邮件管理\r\n## 还有就是回复问题(需要有邮件回复x')]
     for mail_data in mail_list:
+        print(mail_data)
         post_dict = dict()
 
         subject, post_dict['author'], post_dict['from_mail'], post_dict[
