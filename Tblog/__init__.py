@@ -44,8 +44,8 @@ def register_extensions(app):
     login_manager.init_app(app)
     moment.init_app(app)
     mail.init_app(app)
-    scheduler.init_app(app)
     if scheduler.state != STATE_RUNNING:
+        scheduler.init_app(app)
         scheduler.start()
 
 

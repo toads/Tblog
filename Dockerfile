@@ -17,4 +17,4 @@ COPY . /usr/src/app
 ENV PORT 8000
 EXPOSE 8000 5000
 
-CMD ["/usr/local/bin/gunicorn", "-w", "2", "-b", ":8000", "wsgi:create_app()"]
+CMD ["/usr/local/bin/gunicorn", "-w", "2", "-b", ":8000", "wsgi:create_app('production')"]
