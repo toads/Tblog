@@ -26,7 +26,11 @@ python3 -m flask run
 
 ## docker
 
+
 ``` bash
+python3 -m flask initdb
+python3 -m flask init
+vi docker-compose.yml #配置docker-compose ssl
 docker-compose up -d
 ```
 
