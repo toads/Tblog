@@ -177,6 +177,7 @@ def _check_email():
 
 
 def check_email():
+    print("check email")
     with scheduler.app.app_context():
         _check_email()
 

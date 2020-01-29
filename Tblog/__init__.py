@@ -15,7 +15,7 @@ from Tblog.extensions import (bootstrap, csrf, db, toolbar, login_manager,
                               moment, scheduler, mail)
 from Tblog.models import Admin, Category, Article
 from Tblog.settings import config
-
+from flask_apscheduler import STATE_RUNNING
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 
@@ -45,7 +45,8 @@ def register_extensions(app):
     moment.init_app(app)
     mail.init_app(app)
     scheduler.init_app(app)
-    scheduler.start()
+    if scheduler.state != STATE_RUNNING:
+        scheduler.start()
 
 
 def register_logging(app):
