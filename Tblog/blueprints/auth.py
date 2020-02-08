@@ -58,7 +58,7 @@ def authorized():
 
     if not primary_email:
         flash("Plz check your primary email is right")
-        return render_template('auth/login.html', form=form)
+        return redirect(url_for('auth.login'))
     primary_email = primary_email[0]
 
     # username = oauth.github.get('user').json()['name']
