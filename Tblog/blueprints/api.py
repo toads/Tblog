@@ -1,6 +1,6 @@
-from flask import Blueprint, abort, jsonify
+from flask import Blueprint, abort, jsonify, make_response
 from Tblog.models import Admin, Article, Category
-from Tblog.extensions import db
+from Tblog.extensions import db, auth
 
 from flask_restful import Resource, Api
 from Tblog.forms import (post_article_parser, put_article_parser,
@@ -8,6 +8,19 @@ from Tblog.forms import (post_article_parser, put_article_parser,
 api_bp = Blueprint('api', __name__)
 
 api = Api(api_bp, catch_all_404s=True)
+
+
+@auth.get_password
+def get_password(username):
+    admin = Admin.query.filter_by(username=username).first()
+    if admin:
+        return admin.api_key
+    return None
+
+
+@auth.error_handler
+def unauthorized():
+    return make_response(jsonify({'error': 'Unauthorized access'}), 401)
 
 
 def check_token(token):
@@ -19,6 +32,13 @@ def check_token(token):
         abort(400,
               "Verify token error, please check token or connect the admin")
     return admin.username
+
+
+class Token(Resource):
+    @auth.login_required
+    def get(self):
+        token = Admin.query.filter_by(username=auth.username).first().api_key
+        return jsonify({'username': auth.username(), 'token': token})
 
 
 class ArticleItem(Resource):

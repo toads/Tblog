@@ -129,5 +129,7 @@ dmypy.json
 .pyre/
 
 # Test Data Base
-data.db
-data-dev.db
+db/
+
+# VScode file
+.vscode/

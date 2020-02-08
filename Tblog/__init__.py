@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
-import click
-import os
 import logging
-from logging.handlers import SMTPHandler, RotatingFileHandler
+import os
+import re
+from logging.handlers import RotatingFileHandler, SMTPHandler
 
+import click
 from flask import Flask, render_template, request
+from flask_apscheduler import STATE_RUNNING
 from flask_wtf.csrf import CSRFError
 
 from Tblog.blueprints.admin import admin_bp
+from Tblog.blueprints.api import api_bp
 from Tblog.blueprints.auth import auth_bp
 from Tblog.blueprints.blog import blog_bp
-from Tblog.blueprints.api import api_bp
-from Tblog.extensions import (bootstrap, csrf, db, toolbar, login_manager,
-                              moment, scheduler, mail)
-from Tblog.models import Admin, Category, Article
+from Tblog.extensions import (bootstrap, csrf, db, login_manager, mail, moment,
+                              oauth, scheduler, toolbar)
+from Tblog.models import Admin, Article, Category
 from Tblog.settings import config
-from flask_apscheduler import STATE_RUNNING
+
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 
@@ -26,6 +28,18 @@ def create_app(config_name=None):
 
     app.config.from_object(config[config_name])
     register_extensions(app)
+
+    oauth.register(
+        name='github',
+        client_id='3aabfd9767f042bfebac',
+        client_secret='ced4348d7caf203b799b8572783cd86f9736888d',
+        access_token_url='https://github.com/login/oauth/access_token',
+        access_token_params=None,
+        authorize_url='https://github.com/login/oauth/authorize',
+        authorize_params=None,
+        api_base_url='https://api.github.com/',
+        client_kwargs={'scope': 'user:email'},
+    )
     register_blueprints(app)
     register_crsf_exclude(app)
     register_errors(app)
@@ -44,6 +58,8 @@ def register_extensions(app):
     login_manager.init_app(app)
     moment.init_app(app)
     mail.init_app(app)
+    oauth.init_app(app)
+
     if scheduler.state != STATE_RUNNING:
         scheduler.init_app(app)
         scheduler.start()
@@ -147,28 +163,37 @@ def register_commands(app):
     @click.option('--username',
                   prompt=True,
                   help='The username used to login.')
+    @click.option('--email',
+                  prompt=True,
+                  help='The email used to send notice. ')
     @click.option('--password',
                   prompt=True,
                   hide_input=True,
                   confirmation_prompt=True,
                   help='The password used to login.')
-    def init(username, password):
+    def init(username, email, password):
         """Building Tblog, just for you."""
 
         click.echo('Initializing the database...')
         db.create_all()
 
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            click.echo("Email format error")
+            return None
+
         admin = Admin.query.first()
         if admin is not None:
             click.echo('The administrator already exists, updating...')
             admin.username = username
+            admin.email = email
             admin.set_password(password)
         else:
             click.echo('Creating the temporary administrator account...')
             admin = Admin(username=username,
+                          email=email,
                           blog_title="Toads' Blog",
                           blog_sub_title="Life, Programming, Miscellaneous",
-                          name='Toads',
+                          name='toads',
                           about='Nothing except you!')
             admin.set_password(password)
             db.session.add(admin)

@@ -32,11 +32,11 @@
                     <li id="home"><a href="{{url_for('blog.index')}}">Home</a></li>
                     <li id="about"><a href="{{url_for('blog.about')}}">About Me</a></li>
                     {% if current_user.is_authenticated %}
-                    <li id="token"><a href="{{url_for('auth.get_auth_token',username=current_user.username)}}">Token</a>
+                    <li id="token"><a href="{{url_for('auth.get_auth_token')}}">Token</a>
                     </li>
-                    <li><a href="{{url_for('auth.logout',next=request.full_path)}}">Log Out</a></li>
+                    <li id="logout"><a href="{{url_for('auth.logout',next=request.full_path)}}">Log Out</a></li>
                     {% else %}
-                    <li><a href="{{ url_for('auth.login', next=request.full_path) }}">Log In</a></li>
+                    <li id="login"><a href="{{ url_for('auth.login', next=request.full_path) }}">Log In</a></li>
                     {% endif %}
 
                 </ul>

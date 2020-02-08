@@ -43,13 +43,13 @@ class BaseConfig(object):
 
 
 class DevelopmentConfig(BaseConfig):
-    SQLALCHEMY_DATABASE_URI = prefix + os.path.join(basedir, 'data-dev.db')
+    SQLALCHEMY_DATABASE_URI = prefix + os.path.join(basedir, 'db/data-dev.db')
     JOBS = [{
         'id': 'auto_check_email',
         'func': 'Tblog.emails:check_email',
         'args': None,
         'trigger': 'interval',
-        'seconds': 10
+        'seconds': 1000
     }]
 
 
@@ -61,7 +61,7 @@ class TestingConfig(BaseConfig):
 
 class ProductionConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = os.getenv(
-        'DATABASE_URL', prefix + os.path.join(basedir, 'data.db'))
+        'DATABASE_URL', prefix + os.path.join(basedir, 'db/data.db'))
 
 
 config = {

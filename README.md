@@ -16,23 +16,21 @@ python3 -m flask init  # for official use
 python3 -m flask run
 ```
 
-## 配置
+## 仅使用docker
 
 ``` bash
-vim .env-demo # 修改为自己的配置
-mv .env-demo .env
-python3 -m flask run
+# Configure your own environment variables
+# vi .env-demo
+docker run -d --env-file .env-demo  -p20023:8000 toads/tblog
 ```
 
-## docker
-
+## 搭建自己的blog
 
 ``` bash
 python3 -m flask initdb
 python3 -m flask init
-vi docker-compose.yml #配置docker-compose ssl
+vi docker-compose.yml # 配置docker-compose ssl
 docker-compose up -d
 ```
-
 
 PS: 默认用户名密码admin:admin

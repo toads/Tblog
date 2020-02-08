@@ -3,7 +3,7 @@ import secrets
 from flask import current_app
 from Tblog.extensions import db
 from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash, safe_str_cmp
 from itsdangerous import JSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature, SignatureExpired
 
@@ -11,8 +11,9 @@ from itsdangerous import BadSignature, SignatureExpired
 class Admin(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20))
+    email = db.Column(db.String(30))
     password_hash = db.Column(db.String(128))
-    api_key = db.Column(db.String(24))
+    api_key = db.Column(db.String(22))
     blog_title = db.Column(db.String(60))
     blog_sub_title = db.Column(db.String(100))
     name = db.Column(db.String(30))
@@ -23,15 +24,23 @@ class Admin(db.Model, UserMixin):
         self.set_api_key()
 
     def set_api_key(self):
-        self.api_key = secrets.token_urlsafe(24)
+        self.api_key = secrets.token_urlsafe(22)
 
     def verify_password(self, username, password):
-        if username == self.username:
+        if safe_str_cmp(username, self.username):
             return check_password_hash(self.password_hash, password)
         else:
             return False
 
+    def verify_api_key(self, api_key):
+        if safe_str_cmp(self.api_key == api_key):
+            return True
+        return False
+
     def verify_token(self, token):
+        """
+        暂时未使用
+        """
         print("verify_token")
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
