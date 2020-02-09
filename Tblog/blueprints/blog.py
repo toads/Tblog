@@ -6,6 +6,7 @@ blog_bp = Blueprint('blog', __name__)
 
 
 @blog_bp.route('/')
+@blog_bp.route('/articles')
 def index():
     posts = Article.query.filter_by(show=True).order_by(
         Article.timestamp.desc())

@@ -22,7 +22,7 @@ def login():
         remember = form.remember.data
         admin = Admin.query.filter_by(username=username).first()
         if admin:
-            if admin.verify_password(username, password):
+            if admin.verify_password(password):
                 login_user(admin, remember)
                 return redirect_back()
             flash('Invalid username or password.', 'warning')

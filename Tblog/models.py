@@ -3,7 +3,7 @@ import secrets
 from flask import current_app
 from Tblog.extensions import db
 from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash, safe_str_cmp
+from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import JSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature, SignatureExpired
 
@@ -26,16 +26,15 @@ class Admin(db.Model, UserMixin):
     def set_api_key(self):
         self.api_key = secrets.token_urlsafe(22)
 
-    def verify_password(self, username, password):
-        if safe_str_cmp(username, self.username):
-            return check_password_hash(self.password_hash, password)
-        else:
-            return False
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
-    def verify_api_key(self, api_key):
-        if safe_str_cmp(self.api_key == api_key):
-            return True
-        return False
+    @staticmethod
+    def verify_api_key(api_key):
+        admin = Admin.query.filter_by(api_key=api_key).first()
+        if admin:
+            return admin
+        return None
 
     def verify_token(self, token):
         """

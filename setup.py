@@ -15,11 +15,10 @@ requires = [
     'packaging==20.0', 'pathtools==0.1.2', 'pluggy==0.13.1', 'py==1.8.1',
     'pycodestyle==2.5.0', 'pyflakes==2.1.1', 'pyparsing==2.4.6',
     'pytest==5.3.4', 'python-dateutil==2.8.1', 'python-dotenv==0.10.3',
-    'pytz==2019.3', 'PyYAML==5.3', 'requests==2.22.0', 'shiv==0.1.0',
-    'six==1.13.0', 'SQLAlchemy==1.3.12', 'text-unidecode==1.3',
-    'tzlocal==2.0.0', 'urllib3==1.25.7', 'visitor==0.1.3', 'watchdog==0.9.0',
-    'wcwidth==0.1.8', 'Werkzeug==0.16.0', 'WTForms==2.2.1', 'yapf==0.29.0',
-    'zipp==2.0.0'
+    'pytz==2019.3', 'PyYAML==5.3', 'six==1.13.0', 'SQLAlchemy==1.3.12',
+    'text-unidecode==1.3', 'tzlocal==2.0.0', 'urllib3==1.25.7',
+    'visitor==0.1.3', 'watchdog==0.9.0', 'wcwidth==0.1.8', 'Werkzeug==0.16.0',
+    'WTForms==2.2.1', 'yapf==0.29.0', 'zipp==2.0.0'
 ]
 
 setup(name='Tblog',
