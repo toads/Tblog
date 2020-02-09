@@ -15,12 +15,12 @@ def app():
 
         db.drop_all()
         db.create_all()
-        admin = Admin(username='test',
+        admin = Admin(username='testuser',
                       blog_title="Tests Blog",
                       blog_sub_title="Life, Programming, Miscellaneous",
                       name='Tests',
                       about='Nothing except you!')
-        admin.set_password('test')
+        admin.set_password('testpassword')
         db.session.add(admin)
         category = Category.query.first()
         category = Category(name='Default')
@@ -51,7 +51,7 @@ class AuthActions(object):
     def __init__(self, client):
         self._client = client
 
-    def login(self, username="test", password="test"):
+    def login(self, username="testuser", password="testpassword"):
         return self._client.post("/auth/login",
                                  data={
                                      "username": username,

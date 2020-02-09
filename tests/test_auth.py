@@ -7,7 +7,7 @@ def test_login(client, auth):
     auth.login()
     with client:
         client.get('/')
-        assert current_user.username == 'test'
+        assert current_user.username == 'testuser'
         assert current_user.is_authenticated
 
 

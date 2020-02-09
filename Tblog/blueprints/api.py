@@ -45,7 +45,8 @@ def update_article(id=-1):
     article = Article.query.get(id)
     if not article:
         article = Article()
-        article.id = id
+        if id != -1:
+            article.id = id
         article.author = g.username
 
     if article.author != g.username:

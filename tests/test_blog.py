@@ -28,9 +28,9 @@ def test_about(client):
 
 
 def test_token(client, auth):
-    response = client.get('/auth/test/token')
+    response = client.get('/auth/token')
     assert response.status_code == 302
     assert b"Redirecting" in response.data
     auth.login()
-    response = client.get('/auth/test/token')
+    response = client.get('/auth/token')
     assert b"Current user: test" in response.data

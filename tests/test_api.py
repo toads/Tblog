@@ -1,15 +1,27 @@
 from flask import json
+import base64
 
 
 def test_get_token(auth, client):
-    auth.login('test', 'test')
-    resp = client.get('/auth/test/token?json=1')
+    auth.login('testuser', 'testpassword')
+    resp = client.get('/auth/token?json=1')
     assert resp.data
     data = json.loads(resp.data)
     assert data
     token = data.get('token')
     assert token
     return token
+
+
+def test_get_token_by_api(auth, client):
+
+    valid_credentials = base64.b64encode(b'testuser:testpassword').decode(
+        'utf-8')
+    response = client.get(
+        '/api/token', headers={'Authorization': 'Basic ' + valid_credentials})
+    assert response.status == '200 OK'
+    assert json.loads(response.data).get('token') == test_get_token(
+        auth, client)
 
 
 def test_token(auth, client):
@@ -25,13 +37,12 @@ def test_token(auth, client):
     resp = client.put('/api/articles/{article_id}'.format(article_id=1))
     data = json.loads(resp.data)
     assert not data.get('article_id')
-    assert data.get('message')
-    assert data.get('message').get('token') == 'Authentication failed'
+    assert data.get('error')
+    assert data.get('error') == 'Unauthorized access'
 
 
 def test_post_article(auth, client):
     token = test_get_token(auth, client)
-    print(token)
     auth.logout()
     title = "how to write blog"
 
@@ -47,13 +58,16 @@ def test_post_article(auth, client):
      ** Emphasis **    """
     category = 'test_category'
 
-    data = dict(token=token, title=title, body=body, category=category)
+    data = dict(title=title, body=body, category=category, show=True)
+    valid_credentials = base64.b64encode(
+        (token + ": ").encode('utf-8')).decode('utf-8')
 
-    resp = client.post('/api/articles', json=data)
+    resp = client.post('/api/articles',
+                       json=data,
+                       headers={'Authorization': 'Basic ' + valid_credentials})
     data = json.loads(resp.data)
     assert data.get('article_id')
     article_id = data.get('article_id')
-
     resp = client.get('/articles/{article_id}'.format(article_id=article_id))
     assert resp.status_code == 200
     assert b'print ("hello world!")' in resp.data
@@ -64,15 +78,16 @@ def test_post_article(auth, client):
 
 # @pytest.mark.skip(reason="no way of currently testing this")
 def test_put_article(auth, client):
-    token = test_get_token(auth, client)
     title = "test_put_article_title"
     category = 'test_category_for_put'
-    data = dict(token=token, title=title, category=category)
+    data = dict(title=title, category=category)
+    valid_credentials = base64.b64encode(b'testuser:testpassword').decode(
+        'utf-8')
 
     resp = client.put('/api/articles/{article_id}'.format(article_id=1),
-                      json=data)
+                      json=data,
+                      headers={'Authorization': 'Basic ' + valid_credentials})
     data = json.loads(resp.data)
-    print(token)
     assert data.get('article_id') == 1
 
     resp = client.get('/articles/{article_id}'.format(article_id=1))
@@ -85,16 +100,19 @@ def test_put_article(auth, client):
 # @pytest.mark.skip(reason="no way of currently testing this")
 def test_delete_article(auth, client):
     test_put_article(auth, client)
-    token = test_get_token(auth, client)
-    print(token)
     auth.logout()
 
-    token_data = dict(token=token, )
-    resp = client.delete('/api/articles/{article_id}'.format(article_id=1),
-                         json=token_data)
+    valid_credentials = base64.b64encode(b'testuser:testpassword').decode(
+        'utf-8')
+
+    resp = client.delete(
+        '/api/articles/{article_id}'.format(article_id=1),
+        headers={'Authorization': 'Basic ' + valid_credentials})
     data = json.loads(resp.data)
-    assert data.get('message') == "article delete success"
-    resp = client.delete('/api/articles/{article_id}'.format(article_id=1),
-                         json=token_data)
+    assert resp.status == '200 OK'
+    assert data.get('article_id') == 1
+    resp = client.delete(
+        '/api/articles/{article_id}'.format(article_id=1),
+        headers={'Authorization': 'Basic ' + valid_credentials})
     data = json.loads(resp.data)
     assert data.get('message') == "article has been delete"
