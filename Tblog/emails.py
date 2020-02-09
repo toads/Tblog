@@ -131,7 +131,8 @@ def _check_email():
         subject, post_dict['author'], post_dict['from_mail'], post_dict[
             'body'] = mail_data
 
-        if post_dict.get('from_mail') not in source_mail_list:
+        if (not source_mail_list) and (
+                post_dict.get('from_mail') not in source_mail_list):
             send_mail(
                 subject='Tblog: Illegal mailbox',
                 to=current_app.config['TBLOG_ADMIN_MAIL'],

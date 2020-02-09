@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import logging
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 # SQLite URI compatible
@@ -21,9 +22,14 @@ class BaseConfig(object):
     MAIL_PORT = 465
     MAIL_USE_SSL = True
     MAIL_DEFAULT_SENDER = ('Tblog Admin', MAIL_USERNAME)
+    EMAIL_SOURCE = os.getenv('EMAIL_SOURCE')
+    if not EMAIL_SOURCE:
+        logging.warning("EMAIL_SOURCE LIST NOT SET")
+        EMAIL_SOURCE = ''
+        
     MAIL_SOURCE = re.findall(
         r'\s*(?:([a-zA-Z0-9_.]+@\w+\.[a-zA-Z]+?)(?:,|，){0,1}(?:\s+))\s*',
-        os.getenv('EMAIL_SOURCE') + ' ',
+        EMAIL_SOURCE + ' ',
         flags=re.ASCII)
     TBLOG_ADMIN_MAIL = os.getenv('TBLOG_ADMIN_MAIL')
 
