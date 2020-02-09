@@ -8,12 +8,12 @@ RUN mkdir -p /usr/src/app  && \
 
 WORKDIR /usr/src/app
 COPY requirements.txt /usr/src/app/requirements.txt
-
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev  openssl-dev libffi-dev
 RUN pip install --no-cache-dir gunicorn  && \
     pip install --no-cache-dir -r /usr/src/app/requirements.txt 
 
+RUN apk del .build-deps gcc musl-dev
 COPY . /usr/src/app
-
 ENV PORT 8000
 EXPOSE 8000 5000
 
