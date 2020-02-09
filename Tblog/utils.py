@@ -3,7 +3,7 @@ try:
 except ImportError:
     from urllib.parse import urlparse, urljoin
 
-from flask import request, redirect, url_for, current_app
+from flask import request, redirect, url_for
 
 
 def is_safe_url(target):

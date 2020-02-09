@@ -1,28 +1,25 @@
-import os
-import tempfile
-
 import pytest
 from Tblog import create_app
-from Tblog.models import Admin,Category,Article
+from Tblog.models import Admin, Category
 from Tblog.extensions import db
+
+
 @pytest.fixture
 def app():
     """Create and configure a new app instance for each test."""
     # create the app with common test config
     app = create_app("testing")
-    app.config['SECRET_KEY']='testing_key'
+    app.config['SECRET_KEY'] = 'testing_key'
     # create the database and load test data
     with app.app_context():
-        
+
         db.drop_all()
         db.create_all()
-        admin = Admin(
-                username='test',
-                blog_title="Tests Blog",
-                blog_sub_title="Life, Programming, Miscellaneous",
-                name='Tests',
-                about='Nothing except you!'
-            )
+        admin = Admin(username='test',
+                      blog_title="Tests Blog",
+                      blog_sub_title="Life, Programming, Miscellaneous",
+                      name='Tests',
+                      about='Nothing except you!')
         admin.set_password('test')
         db.session.add(admin)
         category = Category.query.first()
@@ -31,17 +28,17 @@ def app():
         db.session.commit()
         yield app
 
-    # close and remove the temporary database
+
 @pytest.fixture
 def client(app):
     return app.test_client()
+
 
 @pytest.fixture
 def test_empty_db(client):
     """Start with a blank database."""
     rv = client.get('/')
-    assert b'No entries here so far' in rv.data 
-
+    assert b'No entries here so far' in rv.data
 
 
 @pytest.fixture
@@ -55,9 +52,11 @@ class AuthActions(object):
         self._client = client
 
     def login(self, username="test", password="test"):
-        return self._client.post(
-            "/auth/login", data={"username": username, "password": password}
-        )
+        return self._client.post("/auth/login",
+                                 data={
+                                     "username": username,
+                                     "password": password
+                                 })
 
     def logout(self):
         return self._client.get("/auth/logout")

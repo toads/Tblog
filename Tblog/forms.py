@@ -1,9 +1,7 @@
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, TextAreaField, ValidationError, HiddenField, \
-    BooleanField, PasswordField
-from wtforms.validators import DataRequired, Email, Length, Optional, URL
 from flask_restful import reqparse
-from Tblog.models import Category
+from flask_wtf import FlaskForm
+from wtforms import BooleanField, PasswordField, StringField, SubmitField
+from wtforms.validators import DataRequired, Length
 
 
 class LoginForm(FlaskForm):

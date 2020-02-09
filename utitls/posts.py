@@ -1,0 +1,155 @@
+#!/usr/bin/python3
+import argparse
+import sys
+
+import requests
+import getpass
+url_post = 'http://127.0.0.1:5000/api/articles'  # change to your address
+TOKEN = 'bb92QvZmZ6_ipkiBfRk4waQw_5aowg'  # change to your key
+
+
+def check_auth(args):
+    if args.username and args.password:
+        auth = (args.username, args.password)
+    else:
+        auth = (args.token, '')
+    return auth
+
+
+def post_article(args):
+    article = args.article
+    body = article.read()
+    auth = check_auth(args)
+
+    r = requests.post(args.url,
+                      json=dict(title=args.title,
+                                body=body,
+                                category=args.category),
+                      auth=auth)
+    print(r.text)
+
+
+def put_article(args):
+    article = args.article
+    body = article.read()
+    auth = check_auth(args)
+
+    r = requests.put(args.url,
+                     json=dict(id=args.id,
+                               title=args.title,
+                               body=body,
+                               category=args.category),
+                     auth=auth)
+    print(r.text)
+
+
+def del_article(args):
+    auth = check_auth(args)
+    r = requests.delete(args.url, json=dict(id=args.id), auth=auth)
+    print(r.text)
+
+
+def _show_article(id, show):
+    auth = check_auth(args)
+    r = requests.put(args.url, json=dict(id=id, show=show), auth=auth)
+    print(r.text)
+
+
+def show_article(args):
+    _show_article(args.id, show=True)
+
+
+def hide_article(args):
+    _show_article(args.id, show=False)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description="A command line-based blog management tool")
+
+    subparser = parser.add_subparsers(help='sub-command help',
+                                      description='action subcommands',
+                                      dest='subparser_name')
+    # Post
+    parser_post = subparser.add_parser('post', help='post a article')
+    parser_post.add_argument('-c',
+                             dest='category',
+                             required=False,
+                             default='Default')
+    parser_post.add_argument('-t', dest='title', required=True)
+    # Put
+    parser_put = subparser.add_parser('put', help='update a article')
+    parser_put.add_argument('-i',
+                            dest='id',
+                            required=True,
+                            help="The article id")
+    parser_put.add_argument('-c', dest='category', required=False)
+    parser_put.add_argument('-t', dest='title', required=False)
+    # Delete
+    parser_delete = subparser.add_parser('delete', help="delete a article")
+    parser_delete.add_argument('-i',
+                               dest='id',
+                               required=True,
+                               help="The article id")
+
+    # Show
+    parser_show = subparser.add_parser(
+        'show', help="Show a hidden but not deleted article")
+    parser_show.add_argument('-i',
+                             '--id',
+                             dest='id',
+                             required=True,
+                             help="The article id")
+    # parser_show.add_argument('id', help="The article id")
+    parser_hide = subparser.add_parser('hide',
+                                       help="hide a article (not delete)")
+    # parser_hide.add_argument('id', help="The article id")
+    parser_hide.add_argument('-i',
+                             '--id',
+                             dest='id',
+                             required=True,
+                             help="The article id")
+
+    # Others
+    parser.add_argument("-v",
+                        "--verbosity",
+                        action="count",
+                        default=0,
+                        help="increase output verbosity")
+
+    parser.add_argument('-T', dest='token', default=TOKEN, required=False)
+    parser.add_argument('-H', dest='host', required=False)
+    parser.add_argument('-U', dest='url', default=url_post, required=False)
+    parser.add_argument('-u',
+                        dest='username',
+                        required=False,
+                        help="use username & password login")
+    parser.add_argument(
+        '--login',
+        action='store_true',
+        help="use username & password login and the username is current user")
+
+    parser.add_argument('-a',
+                        dest='article',
+                        default=sys.stdin,
+                        type=argparse.FileType('r'),
+                        help='path/to/the/MarkDown.md')
+
+    args = parser.parse_args()
+
+    if args.username:
+        args.password = getpass.getpass("Password: ")
+    if args.login:
+        args.username = getpass.getuser()
+        print("Current user: {}".format(args.username))
+        args.password = getpass.getpass("Password: ")
+    if args.subparser_name == 'post':
+        post_article(args)
+    elif args.subparser_name == 'put':
+        put_article(args)
+    elif args.subparser_name == 'delete':
+        del_article(args)
+    elif args.subparser_name == 'show':
+        show_article(args)
+    elif args.subparser_name == 'hide':
+        hide_article(args)

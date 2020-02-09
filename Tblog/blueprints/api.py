@@ -84,10 +84,10 @@ class ArticleItem(Resource):
         admin = Admin.query.first()
         article = Article.query.filter_by(id=id)
         username = check_token(args.token)
-
-        if article.first():
-            if not (admin.verify_token(args.token)
-                    or article.first().author != username):
+        article_first = article.first()
+        if article_first:
+            if not (admin.verify_token(args.token) or # noqa W504
+                    article_first.author != username):
                 abort(403, "Only the admin or owner can delete the article")
             article.delete()
             db.session.commit()

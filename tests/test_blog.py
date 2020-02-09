@@ -1,4 +1,4 @@
-def test_index(client,auth):
+def test_index(client, auth):
     response = client.get('/')
     assert b"Log In" in response.data
     assert b"Log Out" not in response.data
@@ -26,9 +26,10 @@ def test_about(client):
     assert b"Life, Programming, Miscellaneous" in response.data
     assert b"Tests" in response.data
 
-def test_token(client,auth):
+
+def test_token(client, auth):
     response = client.get('/auth/test/token')
-    assert response.status_code==302
+    assert response.status_code == 302
     assert b"Redirecting" in response.data
     auth.login()
     response = client.get('/auth/test/token')

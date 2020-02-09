@@ -2,6 +2,8 @@
 
 一个博客
 
+![Python application](https://github.com/toads/Tblog/workflows/Python%20application/badge.svg)
+
 ## 食用方式
 
 ``` bash
