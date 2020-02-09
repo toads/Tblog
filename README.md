@@ -23,7 +23,10 @@ python3 -m flask run
 ``` bash
 # Configure your own environment variables
 # vi .env-demo
-docker run -d --env-file .env-demo  -p20023:8000 toads/tblog
+docker run --name tblog  -d   \
+	-v db:/usr/src/app/db \
+	--env-file .env-demo  \
+	-p 80:8000 toads/tblog
 ```
 
 ## 搭建自己的blog
