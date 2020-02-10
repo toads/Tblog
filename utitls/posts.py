@@ -77,6 +77,16 @@ if __name__ == '__main__':
                              required=False,
                              default='Default')
     parser_post.add_argument('-t', dest='title', required=True)
+
+    parser_post.add_argument('article',
+                             default=sys.stdin,
+                             type=argparse.FileType('r'),
+                             help='path/to/the/MarkDown.md')
+    parser_post.add_argument('-H',
+                             '--hide',
+                             action='store_true',
+                             help="hide this article")
+
     # Put
     parser_put = subparser.add_parser('put', help='update a article')
     parser_put.add_argument('-i',
@@ -85,30 +95,28 @@ if __name__ == '__main__':
                             help="The article id")
     parser_put.add_argument('-c', dest='category', required=False)
     parser_put.add_argument('-t', dest='title', required=False)
+    parser_put.add_argument('article',
+                            default=sys.stdin,
+                            type=argparse.FileType('r'),
+                            help='path/to/the/MarkDown.md')
+    parser_put.add_argument('-H',
+                            '--hide',
+                            action='store_true',
+                            help="hide this article")
+
     # Delete
     parser_delete = subparser.add_parser('delete', help="delete a article")
-    parser_delete.add_argument('-i',
-                               dest='id',
-                               required=True,
-                               help="The article id")
+    parser_delete.add_argument('id', help="The article id")
 
     # Show
     parser_show = subparser.add_parser(
         'show', help="Show a hidden but not deleted article")
-    parser_show.add_argument('-i',
-                             '--id',
-                             dest='id',
-                             required=True,
-                             help="The article id")
+    parser_show.add_argument('id', help="The article id")
     # parser_show.add_argument('id', help="The article id")
     parser_hide = subparser.add_parser('hide',
                                        help="hide a article (not delete)")
     # parser_hide.add_argument('id', help="The article id")
-    parser_hide.add_argument('-i',
-                             '--id',
-                             dest='id',
-                             required=True,
-                             help="The article id")
+    parser_hide.add_argument('id', help="The article id")
 
     # Others
     parser.add_argument("-v",
@@ -125,15 +133,10 @@ if __name__ == '__main__':
                         required=False,
                         help="use username & password login")
     parser.add_argument(
+        '-l',
         '--login',
         action='store_true',
         help="use username & password login and the username is current user")
-
-    parser.add_argument('-a',
-                        dest='article',
-                        default=sys.stdin,
-                        type=argparse.FileType('r'),
-                        help='path/to/the/MarkDown.md')
 
     args = parser.parse_args()
 

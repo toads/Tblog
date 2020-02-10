@@ -21,7 +21,6 @@ class Admin(db.Model, UserMixin):
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
-        self.set_api_key()
 
     def set_api_key(self):
         self.api_key = secrets.token_urlsafe(22)
@@ -111,3 +110,5 @@ class Link(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
     url = db.Column(db.String(255))
+
+# TODO ADD TAG

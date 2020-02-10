@@ -21,6 +21,7 @@ def app():
                       name='Tests',
                       about='Nothing except you!')
         admin.set_password('testpassword')
+        admin.set_api_key()
         db.session.add(admin)
         category = Category.query.first()
         category = Category(name='Default')

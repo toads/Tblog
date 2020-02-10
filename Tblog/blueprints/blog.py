@@ -1,15 +1,23 @@
-from flask import render_template, Blueprint, abort
-
+from flask import session, render_template, Blueprint, abort
+from flask_login import current_user
+from sqlalchemy import or_
 from Tblog.models import Article, Category, Admin
 
 blog_bp = Blueprint('blog', __name__)
 
 
-@blog_bp.route('/')
 @blog_bp.route('/articles')
+@blog_bp.route('/')
 def index():
-    posts = Article.query.filter_by(show=True).order_by(
-        Article.timestamp.desc())
+    username = session.get('username', 'no_exist_user')
+    if current_user.is_authenticated:
+        posts = Article.query.order_by(Article.timestamp.desc())
+    else:
+        posts = Article.query.filter(
+            or_(
+                Article.category == Category.query.filter_by(
+                    name=username).first(),
+                Article.show is True)).order_by(Article.timestamp.desc())
     return render_template('blog/index.html', posts=posts)
 
 
@@ -22,8 +30,20 @@ def about():
 @blog_bp.route('/category/<int:category_id>')
 def show_category(category_id):
     category = Category.query.get_or_404(category_id)
-    posts = Article.query.filter_by(show=True).with_parent(category).order_by(
-        Article.timestamp.desc())
+    username = session.get('username', 'no_exist_user')
+
+    if current_user.is_authenticated:
+        posts = Article.query.with_parent(category).order_by(
+            Article.timestamp.desc())
+    else:
+        posts = Article.query.filter(
+            or_(
+                Article.category == Category.query.filter_by(
+                    name=username).first(),
+                Article.show is True)).with_parent(category).order_by(
+                    Article.timestamp.desc())
+    if not posts.first():
+        abort(404)
     return render_template('blog/category.html',
                            category=category,
                            posts=posts)
@@ -33,6 +53,8 @@ def show_category(category_id):
 @blog_bp.route('/articles/<int:post_id>', methods=['GET'])
 def show_article(post_id):
     post = Article.query.get_or_404(post_id)
-    if not post.show:
+    username = session.get('username', 'no_exist_user')
+    if not post.show and (not current_user.is_authenticated
+                          and post.category.name != username):  # noqa
         abort(404)
     return render_template('blog/article.html', post=post)

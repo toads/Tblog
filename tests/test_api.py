@@ -8,6 +8,7 @@ def test_get_token(auth, client):
     assert resp.data
     data = json.loads(resp.data)
     assert data
+    print(data)
     token = data.get('token')
     assert token
     return token

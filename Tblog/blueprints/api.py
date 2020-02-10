@@ -6,7 +6,7 @@ from flask_restful import Resource, Api
 from Tblog.forms import (put_article_parser, list_article_id_parser)
 api_bp = Blueprint('api', __name__)
 
-api = Api(api_bp, catch_all_404s=True)
+api = Api(api_bp)
 
 
 @auth.verify_password
@@ -83,11 +83,12 @@ def delete_article(id):
 class Token(Resource):
     @auth.login_required
     def get(self):
-        token = Admin.query.filter_by(username=g.username).first().api_key
+        token = Admin.query.first().api_key
         return jsonify({'username': g.username, 'token': token})
 
 
 class ArticleItem(Resource):
+    @auth.login_required
     def get(self, id):
         post = Article.query.get(id)
         if post:
@@ -106,8 +107,9 @@ class ArticleItem(Resource):
 
 
 class ArticlesList(Resource):
+    @auth.login_required
     def get(self):
-        articles = Article.query.filter_by(show=True).all()
+        articles = Article.query.all()
         articles_dict = dict(articles=[])
         for article in articles:
             articles_dict['articles'].append(article.to_json(summary=True))

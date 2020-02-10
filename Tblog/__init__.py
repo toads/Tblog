@@ -31,8 +31,8 @@ def create_app(config_name=None):
 
     oauth.register(
         name='github',
-        client_id='3aabfd9767f042bfebac',
-        client_secret='ced4348d7caf203b799b8572783cd86f9736888d',
+        client_id=app.config.get('GITHUB_CLIENT_ID'),
+        client_secret=app.config.get('GITHUB_CLIENT_SECRET'),
         access_token_url='https://github.com/login/oauth/access_token',
         access_token_params=None,
         authorize_url='https://github.com/login/oauth/authorize',
@@ -47,6 +47,9 @@ def create_app(config_name=None):
     register_template_context(app)
     register_commands(app)
     # register_request_handlers(app)
+    with app.app_context():
+        db.create_all()
+
     return app
 
 
@@ -187,6 +190,7 @@ def register_commands(app):
             admin.username = username
             admin.email = email
             admin.set_password(password)
+            admin.ser_api_key()
         else:
             click.echo('Creating the temporary administrator account...')
             admin = Admin(username=username,
@@ -196,6 +200,8 @@ def register_commands(app):
                           name='toads',
                           about='Nothing except you!')
             admin.set_password(password)
+            admin.set_api_key()
+
             db.session.add(admin)
 
         category = Category.query.first()

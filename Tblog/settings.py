@@ -26,7 +26,7 @@ class BaseConfig(object):
     if not EMAIL_SOURCE:
         logging.warning("EMAIL_SOURCE LIST NOT SET")
         EMAIL_SOURCE = ''
-        
+
     MAIL_SOURCE = re.findall(
         r'\s*(?:([a-zA-Z0-9_.]+@\w+\.[a-zA-Z]+?)(?:,|，){0,1}(?:\s+))\s*',
         EMAIL_SOURCE + ' ',
@@ -37,6 +37,11 @@ class BaseConfig(object):
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_RECORD_QUERIES = True
+
+    GITHUB_CLIENT_ID = os.getenv('GITHUB_CLIENT_ID')
+    GITHUB_CLIENT_SECRET = os.getenv('GITHUB_CLIENT_SECRET')
+    if not GITHUB_CLIENT_ID or not GITHUB_CLIENT_SECRET:
+        logging.warning("GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET NOT SET")
 
     SCHEDULER_API_ENABLE = True
     JOBS = [{
