@@ -13,11 +13,12 @@ def index():
     if current_user.is_authenticated:
         posts = Article.query.order_by(Article.timestamp.desc())
     else:
+
         posts = Article.query.filter(
             or_(
                 Article.category == Category.query.filter_by(
                     name=username).first(),
-                Article.show is True)).order_by(Article.timestamp.desc())
+                Article.show)).order_by(Article.timestamp.desc())
     return render_template('blog/index.html', posts=posts)
 
 
@@ -40,7 +41,7 @@ def show_category(category_id):
             or_(
                 Article.category == Category.query.filter_by(
                     name=username).first(),
-                Article.show is True)).with_parent(category).order_by(
+                Article.show)).with_parent(category).order_by(
                     Article.timestamp.desc())
     if not posts.first():
         abort(404)
