@@ -16,7 +16,7 @@ requires = [
     'pytz==2019.3', 'PyYAML==5.3', 'six==1.13.0', 'SQLAlchemy==1.3.12',
     'text-unidecode==1.3', 'tzlocal==2.0.0', 'urllib3==1.25.7',
     'visitor==0.1.3', 'wcwidth==0.1.8', 'Werkzeug==0.16.0', 'WTForms==2.2.1',
-    'yapf==0.29.0', 'zipp==2.0.0'
+    'yapf==0.29.0', 'zipp==2.0.0', 'Markdown==3.2'
 ]
 
 setup(name='Tblog',

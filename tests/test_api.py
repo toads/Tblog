@@ -40,7 +40,7 @@ def test_post_article(auth, client):
      Test case 1
      ~~~~~~~~~~~~~~~~~~~~~~
      print ("hello world!")
-     ~~~~~~~~~~~~~~~~~~~~~~
+     ~~~~~~~~~~~~~~~~~~~~~~`
      2. Test case 2
      ##  Secondary directory
      ### Third-level directory

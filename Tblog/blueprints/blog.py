@@ -1,8 +1,8 @@
-from flask import session, render_template, Blueprint, abort
+from flask import session, render_template, Blueprint, abort, request
 from flask_login import current_user
 from sqlalchemy import or_
 from Tblog.models import Article, Category, Admin
-
+import markdown
 blog_bp = Blueprint('blog', __name__)
 
 
@@ -58,4 +58,8 @@ def show_article(post_id):
     if not post.show and (not current_user.is_authenticated
                           and post.category.name != username):  # noqa
         abort(404)
+
+    if post.body:
+        post.body = markdown.markdown(post.body)
+    
     return render_template('blog/article.html', post=post)

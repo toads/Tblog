@@ -43,10 +43,7 @@
     </div>
 </div>
 
-<div id="content"></div>
+<div id="content">{{ post.body |safe}}</div>
 
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script>
-    document.getElementById('content').innerHTML = marked(`{{post.body|safe}}`);
-</script>
 {% endblock %}
+

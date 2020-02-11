@@ -5,7 +5,7 @@ import sys
 import requests
 import getpass
 url_post = 'http://127.0.0.1:5000/api/articles'  # change to your address
-TOKEN = 'bb92QvZmZ6_ipkiBfRk4waQw_5aowg'  # change to your key
+TOKEN =  'l_j3kV6FcMbcckemgIhS3LLpEOD-AA'  # change to your key
 
 
 def check_auth(args):
