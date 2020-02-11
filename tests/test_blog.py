@@ -23,6 +23,7 @@ def test_index(client, auth):
 def test_about(client):
     response = client.get('/about')
     print(response.data)
+    assert b"Nothing except you!" in response.data
     assert b"Life, Programming, Miscellaneous" in response.data
     assert b"Tests" in response.data
 
