@@ -111,4 +111,5 @@ class Link(db.Model):
     name = db.Column(db.String(30))
     url = db.Column(db.String(255))
 
+
 # TODO ADD TAG

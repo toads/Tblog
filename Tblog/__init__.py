@@ -125,10 +125,6 @@ def register_shell_context(app):
         return dict(db=db, Admin=Admin, Article=Article, Category=Category)
 
 
-def register_template_context(app):
-    pass
-
-
 def register_errors(app):
     @app.errorhandler(400)
     def bad_request(e):
@@ -146,6 +142,14 @@ def register_errors(app):
     def handle_csrf_error(e):
         return render_template('errors/400.html',
                                description=e.description), 400
+
+
+def register_template_context(app):
+    @app.context_processor
+    def make_template_context():
+        admin = Admin.query.first()
+        categories = Category.query.order_by(Category.name).all()
+        return dict(admin=admin, categories=categories)
 
 
 def register_commands(app):

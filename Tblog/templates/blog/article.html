@@ -3,13 +3,42 @@
 
 {% block content %}
 <div class="page-header">
+
     <h2>{{ post.title|safe }}</h2>
-    <div style="text-align: right;">
+    <div align="right">
         <small>
-            Category: <a
-                href="{{ url_for('.show_category', category_id=post.category.id) }}">{{ post.category.name }}</a>
-            &nbsp;&nbsp;
-            <span display=>{{ moment(post.timestamp).format('LL') }}</span>
+            <form action="{{url_for('admin.switch_show_state')}}" method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                <input type="hidden" name="aid" value="{{post.id}}" />
+
+                <table border="0">
+                    {% if current_user.is_authenticated %}
+                    <tr>
+                        <td> Article State:</td>
+                        <td> <a
+                                class="label label-{{'success' if post.show else 'default'}}">{{'Public' if post.show else 'Private'}}</a>
+                        </td>
+                        <td align="right">
+                            <input class="btn btn-xs" type="submit" value="change" />
+                        </td>
+
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <td>Category: </td>
+
+                        <td align="right"><a class=""
+                                href="{{ url_for('.show_category', category_id=post.category.id) }}">{{ post.category.name }}</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td align="right">
+                            <span display=>{{ moment(post.timestamp).format('LL') }}</span>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+
+
         </small>
     </div>
 </div>

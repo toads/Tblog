@@ -5,7 +5,7 @@
     {% block head %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{%block title%} {%endblock title%}</title>
+    <title>{%block title%}  {%endblock title%}-{{ admin.blog_title|default('Blog Title',None) }}</title>
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
@@ -25,14 +25,24 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ url_for('blog.index') }}">Toads's Blog</a>
+                <a class="navbar-brand" href="{{ url_for('blog.index') }}">{{ admin.blog_title|default('Blog Title',None) }}</a>
+
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right" style="margin-right:auto; align-self: auto;;">
                     <li id="home"><a href="{{url_for('blog.index')}}">Home</a></li>
                     <li id="about"><a href="{{url_for('blog.about')}}">About Me</a></li>
                     {% if current_user.is_authenticated %}
-                    <li id="token"><a href="{{url_for('auth.get_auth_token')}}">Token</a>
+                    <li  class="dropdown">
+                        <a href="{{url_for('admin.mange')}}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Mange <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{url_for('admin.mange')}}" >Manger</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{{url_for('admin.get_auth_token')}}">Token</a></li>
+                            <li><a href="{{url_for('admin.settings')}}">Settings</a></li>
+                            <li><a href="{{url_for('admin.reset_password')}}">Reset Password</a></li>
+                          </ul>
+                    </li>
                     </li>
                     <li id="logout"><a href="{{url_for('auth.logout',next=request.full_path)}}">Log Out</a></li>
                     {% else %}
@@ -68,14 +78,14 @@
     {{ moment.include_moment(local_js=url_for('static', filename='js/moment-with-locales.min.js')) }}
     <script src={{url_for('static',filename='js/base.js')}}></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-116710997-2"></script>
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-116710997-2"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
 
         gtag('config', 'UA-116710997-2');
-    </script>
+    </script> -->
 
     {% endblock %}
 </body>

@@ -2,18 +2,6 @@ from flask import json
 import base64
 
 
-def test_get_token(auth, client):
-    auth.login('testuser', 'testpassword')
-    resp = client.get('/auth/token?json=1')
-    assert resp.data
-    data = json.loads(resp.data)
-    assert data
-    print(data)
-    token = data.get('token')
-    assert token
-    return token
-
-
 def test_get_token_by_api(auth, client):
 
     valid_credentials = base64.b64encode(b'testuser:testpassword').decode(
@@ -21,12 +9,12 @@ def test_get_token_by_api(auth, client):
     response = client.get(
         '/api/token', headers={'Authorization': 'Basic ' + valid_credentials})
     assert response.status == '200 OK'
-    assert json.loads(response.data).get('token') == test_get_token(
-        auth, client)
+    assert json.loads(response.data).get('token')
+    return json.loads(response.data).get('token')
 
 
 def test_token(auth, client):
-    token = test_get_token(auth, client)
+    token = test_get_token_by_api(auth, client)
 
     title = "test_put_article_title_token"
 
@@ -43,7 +31,7 @@ def test_token(auth, client):
 
 
 def test_post_article(auth, client):
-    token = test_get_token(auth, client)
+    token = test_get_token_by_api(auth, client)
     auth.logout()
     title = "how to write blog"
 

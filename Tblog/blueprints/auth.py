@@ -1,5 +1,5 @@
-from flask import (Blueprint, flash, jsonify, redirect, session, json,
-                   render_template, request, url_for)
+from flask import (Blueprint, flash, redirect, session, json, render_template,
+                   url_for)
 from flask_login import current_user, login_required, login_user, logout_user
 from authlib.common.errors import AuthlibBaseError
 from Tblog.extensions import oauth, db
@@ -20,6 +20,10 @@ def login():
         username = form.username.data
         password = form.password.data
         remember = form.remember.data
+        if not Admin.query.first():
+            flash('Please Login Use Github', 'info')
+            return render_template('auth/login.html', form=form)
+
         admin = Admin.query.filter_by(username=username).first()
         if admin:
             if admin.verify_password(password):
@@ -29,7 +33,6 @@ def login():
             flash('Invalid username or password.', 'warning')
         else:
             flash('Invalid username or password.', 'warning')
-
     return render_template('auth/login.html', form=form)
 
 
@@ -41,6 +44,7 @@ def login_github():
 
 
 @auth_bp.route('/logout')
+@login_required
 def logout():
     logout_user()
     session.pop('github_token', None)
@@ -71,12 +75,7 @@ def authorized():
         db.session.add(admin)
         db.session.commit()
         login_user(admin, remember=True)
-        flash(
-            "Welcome to register, your username is {username} and password "
-            "is {password} can log in through GitHub or username&password "
-            "in the future".format(username=username, password=admin.api_key),
-            "info")
-        return redirect_back()
+        return redirect(url_for('admin.settings'))
 
     admin = Admin.query.filter_by(email=primary_email).first()
     session['username'] = username
@@ -87,16 +86,3 @@ def authorized():
     else:
         flash("Welcome to tblog {username}".format(username=username), "info")
         return redirect_back()
-
-
-@auth_bp.route('/token', methods=['GET'])
-@login_required
-def get_auth_token(reset=False):
-    admin = Admin.query.first()
-    if request.args.get('reset'):
-        admin.set_api_key()
-        flash("Reset token success!", "info")
-    token = admin.api_key
-    if request.args.get('json'):
-        return jsonify({'username': current_user.username, 'token': token})
-    return render_template('auth/token.html', token=token)

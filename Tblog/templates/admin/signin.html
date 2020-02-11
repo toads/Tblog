@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+
+{% block title %}Sign In{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Sign In</h1>
+    </div>
+    <div style="max-width: 330px; margin: 0 auto; padding: 15px;"
+    class="row h-100 page-header justify-content-center align-items-center form-signin">
+    
+    <label class="form-control-label">Username: {{current_user.username}}</label>
+
+    {{ render_form(form) }}
+    </div>
+    
+{% endblock %}
