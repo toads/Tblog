@@ -45,15 +45,11 @@ def settings():
 def reset_password():
     form = SignInForm()
     if form.validate_on_submit():
-        password = form.password.data
-        if current_user.verify_password(password):
-            current_user.set_password(form.password.data)
-            db.session.commit()
-            flash('Password  updated.', 'success')
-            return redirect(url_for('blog.index'))
-        else:
-            flash('password Error', 'warning')
-    return render_template('admin/signin.html', form=form)
+        current_user.set_password(form.password.data)
+        db.session.commit()
+        flash('Password  updated.', 'success')
+        return redirect(url_for('blog.index'))
+    return render_template('admin/reset_password.html', form=form)
 
 
 @admin_bp.route('/token', methods=['GET', 'POST'])

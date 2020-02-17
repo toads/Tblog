@@ -67,12 +67,9 @@ def update_article(id=-1):
 
 
 def delete_article(id):
-    admin = Admin.query.first()
     article = Article.query.filter_by(id=id)
     article_item = article.first()
     if article_item:
-        if article_item.author != g.username or admin.username != g.username:
-            abort(403, "Only the admin or owner can delete the article")
         article.delete()
         db.session.commit()
         return id
