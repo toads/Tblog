@@ -9,6 +9,15 @@
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js"></script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          config: ["MMLorHTML.js"],
+          jax: ["input/TeX", "output/HTML-CSS", "output/NativeMML"],
+          extensions: ["MathMenu.js", "MathZoom.js"]
+        });
+    </script>
     {% endblock head %}
 </head>
 
@@ -72,9 +81,8 @@
         {% block footer %} {% endblock footer %}
     </main>
     {% block scripts %}
-    <script src="https://code.jquery.com/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../../static/js/jquery.min.js"><\/script>')</script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src={{url_for('static',filename='js/jquery.min.js')}}></script>
+    <script src={{url_for('static',filename='js/bootstrap.min.js')}}></script>
     {{ moment.include_moment(local_js=url_for('static', filename='js/moment-with-locales.min.js')) }}
     <script src={{url_for('static',filename='js/base.js')}}></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -86,15 +94,7 @@
 
         gtag('config', 'UA-116710997-2');
     </script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js">
-    </script>
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-          config: ["MMLorHTML.js"],
-          jax: ["input/TeX", "output/HTML-CSS", "output/NativeMML"],
-          extensions: ["MathMenu.js", "MathZoom.js"]
-        });
-    </script>
+
     {% endblock %}
 </body>
 

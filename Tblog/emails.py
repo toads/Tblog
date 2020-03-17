@@ -55,7 +55,7 @@ def getMail(host, username, password, port=993, delete=False):
         serv = imaplib.IMAP4(host, port)
 
     serv.login(username, password)
-    serv.select()
+    serv.select('INBOX')
     # 搜索邮件内容
     typ, data1 = serv.search(None, 'ALL')
 
