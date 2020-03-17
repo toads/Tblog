@@ -1,12 +1,28 @@
 * {
     box-sizing: border-box;
 }
-
 body {
     min-height: 90vh;
     padding-top: 70px;
+    font-family:"PT Serif", 'Times New Roman', Times, serif;
+    font-size: 18px;
 }
 
+img {
+    max-width:100%;
+	margin:20px auto;
+	height:auto;
+	border:0;
+	outline:0;
+	-webkit-box-shadow: 6px 6px 10px gray;
+    -moz-box-shadow: 6px 6px 10px gray;
+    box-shadow: 6px 6px 10px gray;
+    /*set the images aligned*/
+    padding: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 .navbar-brand {
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, Helvetica, STKaiti, SimSun, serif;

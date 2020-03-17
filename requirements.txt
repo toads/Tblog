@@ -52,6 +52,7 @@ pytest==5.3.4
 pytest-flask==0.15.1
 python-dateutil==2.8.1
 python-dotenv==0.10.3
+python-markdown-math
 pytz==2019.3
 PyYAML==5.3
 requests==2.22.0

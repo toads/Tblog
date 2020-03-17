@@ -58,8 +58,8 @@ def show_article(post_id):
     if not post.show and (not current_user.is_authenticated
                           and post.category.name != username):  # noqa
         abort(404)
-
     if post.body:
-        post.body = markdown.markdown(post.body)
+        md = markdown.Markdown(extensions=['mdx_math'])
+        post.body = md.convert(post.body)
 
     return render_template('blog/article.html', post=post)

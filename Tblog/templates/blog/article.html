@@ -4,7 +4,7 @@
 {% block content %}
 <div class="page-header">
 
-    <h2>{{ post.title|safe }}</h2>
+    <h1>{{ post.title|safe }}</h1>
     <div align="right">
         <small>
             <form action="{{url_for('admin.switch_show_state')}}" method="post">
@@ -47,3 +47,7 @@
 
 {% endblock %}
 
+{% block script %}
+{{ super() }}
+<script src={{url_for('static',filename='js/base.js')}}></script>
+{% endblock %}
