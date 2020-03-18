@@ -51,7 +51,6 @@ def update_article(id=-1):
 
     if article.author != g.username:
         abort(403, "Only the own can edit this article")
-
     if args.title:
         article.title = args.title
     if args.body:

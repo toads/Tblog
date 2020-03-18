@@ -69,7 +69,7 @@ def test_post_article(auth, client):
 def test_put_article(auth, client):
     title = "test_put_article_title"
     category = 'test_category_for_put'
-    data = dict(title=title, category=category)
+    data = dict(title=title, category=category, body='###fff')
     valid_credentials = base64.b64encode(b'testuser:testpassword').decode(
         'utf-8')
 
@@ -77,10 +77,10 @@ def test_put_article(auth, client):
                       json=data,
                       headers={'Authorization': 'Basic ' + valid_credentials})
     data = json.loads(resp.data)
+    # print(data)
+
     assert data.get('article_id') == 1
-
     resp = client.get('/articles/{article_id}'.format(article_id=1))
-
     assert resp.status_code == 200
     assert b'test_put_article_title' in resp.data
     assert b'test_category_for_put' in resp.data

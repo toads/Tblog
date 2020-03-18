@@ -34,7 +34,7 @@ inflection==0.3.1
 itsdangerous==1.1.0
 Jinja2==2.10.3
 loginpass==0.4
-Markdown==3.2
+markdown2
 MarkupSafe==1.1.1
 mccabe==0.6.1
 more-itertools==8.1.0
@@ -52,7 +52,6 @@ pytest==5.3.4
 pytest-flask==0.15.1
 python-dateutil==2.8.1
 python-dotenv==0.10.3
-python-markdown-math
 pytz==2019.3
 PyYAML==5.3
 requests==2.22.0

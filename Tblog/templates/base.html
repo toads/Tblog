@@ -4,20 +4,38 @@
 <head>
     {% block head %}
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{%block title%}  {%endblock title%}-{{ admin.blog_title|default('Blog Title',None) }}</title>
+    <meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
+    <title>{%block title%} {%endblock title%}-{{ admin.blog_title|default('Blog Title',None) }}</title>
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js"></script>
+    <script src={{url_for('static',filename='js/polyfill.min.js')}}></script>
+    <script id="MathJax-script" async src={{url_for('static',filename='js/tex-mml-chtml.js')}}></script>
+    <script>
 
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-          config: ["MMLorHTML.js"],
-          jax: ["input/TeX", "output/HTML-CSS", "output/NativeMML"],
-          extensions: ["MathMenu.js", "MathZoom.js"]
-        });
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                scale: 1,                      // global scaling factor for all expressions
+                minScale: .5,                  // smallest scaling factor to use
+                matchFontHeight: true,         // true to match ex-height of surrounding font
+                mtextInheritFont: false,       // true to make mtext elements use surrounding font
+                merrorInheritFont: true,       // true to make merror text use surrounding font
+                mathmlSpacing: false,          // true for MathML spacing rules, false for TeX rules
+                skipAttributes: {},            // RFDa and other attributes NOT to copy to the output
+                exFactor: .5,                  // default size of ex in em units
+                displayAlign: 'center',        // default for indentalign when set to 'auto'
+                displayIndent: '0',            // default for indentshift when set to 'auto'
+                fontCache: 'global',            // or 'global' or 'none'
+                localID: null,                 // ID to use for local font cache (for single equation processing)
+                internalSpeechTitles: true,    // insert <title> tags with speech content
+                titleID: 0                     // initial id number to use for aria-labeledby titles
+            }
+        };
     </script>
+
     {% endblock head %}
 </head>
 
@@ -34,7 +52,8 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ url_for('blog.index') }}">{{ admin.blog_title|default('Blog Title',None) }}</a>
+                <a class="navbar-brand"
+                    href="{{ url_for('blog.index') }}">{{ admin.blog_title|default('Blog Title',None) }}</a>
 
             </div>
             <div id="navbar" class="navbar-collapse collapse">
@@ -42,15 +61,17 @@
                     <li id="home"><a href="{{url_for('blog.index')}}">Home</a></li>
                     <li id="about"><a href="{{url_for('blog.about')}}">About Me</a></li>
                     {% if current_user.is_authenticated %}
-                    <li  class="dropdown">
-                        <a href="{{url_for('admin.mange')}}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Mange <span class="caret"></span></a>
+                    <li class="dropdown">
+                        <a href="{{url_for('admin.mange')}}" class="dropdown-toggle" data-toggle="dropdown"
+                            role="button" aria-haspopup="true" aria-expanded="false">Mange <span
+                                class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{url_for('admin.mange')}}" >Manger</a></li>
+                            <li><a href="{{url_for('admin.mange')}}">Manger</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="{{url_for('admin.get_auth_token')}}">Token</a></li>
                             <li><a href="{{url_for('admin.settings')}}">Settings</a></li>
                             <li><a href="{{url_for('admin.reset_password')}}">Reset Password</a></li>
-                          </ul>
+                        </ul>
                     </li>
                     </li>
                     <li id="logout"><a href="{{url_for('auth.logout',next=request.full_path)}}">Log Out</a></li>
@@ -63,6 +84,8 @@
         </div>
     </div>
     {% endblock %}
+    {% block sidebar %} {% endblock sidebar %}
+
     <main class="container ">
         {% with messages = get_flashed_messages(with_categories=true) %}
         <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
@@ -76,13 +99,13 @@
         {% endfor %}
         {% endif %}
         {% endwith %}
-
         {% block content %}{% endblock content %}
         {% block footer %} {% endblock footer %}
     </main>
     {% block scripts %}
     <script src={{url_for('static',filename='js/jquery.min.js')}}></script>
     <script src={{url_for('static',filename='js/bootstrap.min.js')}}></script>
+
     {{ moment.include_moment(local_js=url_for('static', filename='js/moment-with-locales.min.js')) }}
     <script src={{url_for('static',filename='js/base.js')}}></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -94,6 +117,7 @@
 
         gtag('config', 'UA-116710997-2');
     </script>
+
 
     {% endblock %}
 </body>
