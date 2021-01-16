@@ -26,4 +26,11 @@ setup(name='Tblog',
       author_email='toads@foxmail.com',
       packages=find_packages(),
       install_requires=requires,
-      license='MIT')
+      license='MIT',
+      classifiers=[
+          'Operating System :: MacOS :: MacOS X',
+          'Operating System :: Microsoft :: Windows',
+          'Operating System :: POSIX',
+          'Programming Language :: Python'
+      ]
+      )
