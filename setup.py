@@ -9,7 +9,7 @@ requires = [
     'Flask-Moment==0.9.0', 'Flask-OAuth==0.12', 'Flask-RESTful==0.3.7',
     'Flask-SQLAlchemy==2.4.1', 'Flask-WTF==0.14.2', 'httplib2==0.18.0',
     'idna==2.8', 'importlib-metadata==1.4.0', 'importlib-resources==1.0.2',
-    'inflection==0.3.1', 'itsdangerous==1.1.0', 'Jinja2==2.10.3',
+    'inflection==0.3.1', 'itsdangerous==1.1.0', 'Jinja2==2.11.3',
     'MarkupSafe==1.1.1', 'mccabe==0.6.1', 'more-itertools==8.1.0',
     'packaging==20.0', 'pathtools==0.1.2', 'pluggy==0.13.1', 'py==1.8.1',
     'pyparsing==2.4.6', 'python-dateutil==2.8.1', 'python-dotenv==0.10.3',
