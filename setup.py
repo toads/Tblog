@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 requires = [
     'aniso8601==8.0.0', 'APScheduler==3.6.3', 'argh==0.26.2', 'attrs==19.3.0',
-    'blinker==1.4', 'Bootstrap-Flask==1.2.0', 'certifi==2019.11.28',
+    'blinker==1.4', 'Bootstrap-Flask==1.2.0', 'certifi==2022.12.7',
     'chardet==3.0.4', 'click==6.7', 'dominate==2.4.0', 'entrypoints==0.3',
     'Faker>=3.0.0', 'Flask', 'Flask-APScheduler==1.11.0',
     'Flask-HTTPAuth==3.3.0', 'Flask-Login==0.4.1', 'Flask-Mail==0.9.1',
